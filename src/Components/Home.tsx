@@ -1,7 +1,7 @@
-import { FormEvent , useState , useCallback } from "react";
+import { FormEvent , useState } from "react";
 import StoreImage from "../assets/store_image.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import {User , Password, Email , getToken} from '../api'
+import {User , Password, Email , getToken , getUser} from '../api'
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ const Home = () => {
     
     const user =new User(new Email(username),"","",new Password(password));
     const token = await getToken(user);
+    const user_info = await getUser(token["access_token"]);
     navigate("/dashboard");
   };
 

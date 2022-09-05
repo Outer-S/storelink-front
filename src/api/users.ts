@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import Api from "./axios";
+import Api , {TokenizedInstance} from "./axios";
 import { User, Store } from "./types";
 
 export const registerUser = async function (user: User, store: Store) {
@@ -47,7 +47,11 @@ export const getToken = async function (user: User) {
     headers: {"Content-Type":"application/x-www-form-urlencoded"},
   });
   
-  console.log(response.data);
-  
   return response.data
 };
+
+export const getUser = async function (token:string){
+  const tokenizedApi = TokenizedInstance(token) ;
+  let user = await tokenizedApi.get('/users/user');
+  console.log(user);
+}

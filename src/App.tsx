@@ -1,5 +1,5 @@
 import {Home,Register,EmailConfirm,Dashboard} from './Components'
-import { BrowserRouter, Routes , Route} from 'react-router-dom'
+import { BrowserRouter, Routes , Route,Navigate} from 'react-router-dom'
 
 
 function App() {
@@ -10,6 +10,7 @@ function App() {
         <Route path='/sign-up' element={<Register/>} />
         <Route path='/confirm_email/:userId' element= {<EmailConfirm/>} />
         <Route  path='/dashboard'   element={<Dashboard/>} />
+        <Route path='/' element={<Navigate to="/sign-in" replace />} />
       </Routes>
     </BrowserRouter >
   )
