@@ -31,8 +31,14 @@ export class Email {
     }
 }
 
+export interface Inventory{
+    name?:string
+    description?:string
+    belongs_to?:string
+}
+
 export class User{
-    constructor (public email:Email, public firstname?:string ,public lastname?:string,
+    constructor (public email?:Email, public firstname?:string ,public lastname?:string,
         public password?:Password,public active?:boolean,public email_confirmed?:boolean,
         public store?:string,public roles?:string[])
     {
@@ -44,4 +50,13 @@ export class Store {
     constructor (public name:string,public subscriptionType:SubscriptionTypes,public subscriptionEnd?:Date)
     {
     }
+}
+
+export const rolesTitles= {
+    "admin" : (store_id:string) : string => `${store_id}:store:admin`,
+    "manager" : (store_id :string) :string => `${store_id}:store:manager`,
+    "inventory_manager" : (inventory_id :string) => `${inventory_id}:inventory:manager`,
+    "inventory_read": (inventory_id :string) => `${inventory_id}:inventory:read`,
+    "inventory_modify" : (inventory_id :string) => `${inventory_id}:inventory:modify`,
+    "inventory_delete" : (inventory_id:string) => `${inventory_id}:inventory:delete` 
 }

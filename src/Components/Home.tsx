@@ -2,18 +2,27 @@ import { FormEvent , useState } from "react";
 import StoreImage from "../assets/store_image.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import {User , Password, Email , getToken , getUser} from '../api'
+import {useAppDispatch,setUser, setToken} from '../app'
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [username,setUsername] = useState("");
   const [password,setPassword] = useState("");
   
   const login = async (event: FormEvent) => {
     event.preventDefault();
-    
-    const user =new User(new Email(username),"","",new Password(password));
-    const token = await getToken(user);
-    const user_info = await getUser(token["access_token"]);
+    try{
+      const user =new User(new Email(username),"","",new Password(password));
+      const token = await getToken(user);
+      dispatch(setToken(token["access_token"]));
+      let user_info = await getUser(token["access_token"]);
+      dispatch(setUser(user_info));
+    }
+    catch(e){
+      console.log(e)
+      return;
+    }
     navigate("/dashboard");
   };
 

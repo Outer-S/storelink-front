@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import Api , {TokenizedInstance} from "./axios";
-import { User, Store } from "./types";
+import { User, Store, Email } from "./types";
 
 export const registerUser = async function (user: User, store: Store) {
   if (
@@ -19,7 +19,7 @@ export const registerUser = async function (user: User, store: Store) {
     user: {
       firstname: user.firstname,
       lastname: user.lastname,
-      email: user.email.email,
+      email: user.email?.email,
       password: user.password?.password,
     },
     store: {
@@ -40,7 +40,7 @@ export const getToken = async function (user: User) {
     throw new Error("Password or email missing");
 
   let data = new URLSearchParams();
-  data.append("username", user.email.email);
+  data.append("username", user.email?.email as string);
   data.append("password", user.password?.password as string);
 
   let response: AxiosResponse = await Api.post(`/users/token`, data, {
@@ -50,8 +50,17 @@ export const getToken = async function (user: User) {
   return response.data
 };
 
-export const getUser = async function (token:string){
+export const getUser = async function (token:string):Promise<User>{
   const tokenizedApi = TokenizedInstance(token) ;
-  let user = await tokenizedApi.get('/users/user');
-  console.log(user);
+  let user = (await tokenizedApi.get('/users/user')).data;
+  
+  return new User(new Email(user["email"]),
+    user["firstname"],
+    user["lastname"],
+    undefined,
+    user["active"],
+    user["email_confirmed"],
+    user["store"],
+    user["roles"]
+  );
 }
